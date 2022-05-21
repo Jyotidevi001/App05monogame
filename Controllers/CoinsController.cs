@@ -22,7 +22,7 @@ namespace App05MonoGame.Controllers
     /// collisions with the player sprite
     /// </summary>
     /// <authors>
-    /// Derek Peacock & Andrei Cruceru
+    /// Jyoti Devi & Narinder Kaur
     /// </authors>
     public class CoinsController : IUpdateableInterface, 
         IDrawableInterface, ICollideableInterface
@@ -55,7 +55,7 @@ namespace App05MonoGame.Controllers
             SoundController.PlaySoundEffect(Sounds.Coins);
 
             Animation animation = new Animation(
-                game.Graphics, "coin", copperCoinSheet, 8);
+                game.GraphicsDevice, "coin", copperCoinSheet, 8);
 
             AnimatedSprite coin = new AnimatedSprite()
             {

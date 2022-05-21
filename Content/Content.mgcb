@@ -181,6 +181,30 @@
 /processorParam:TextureFormat=Color
 /build:Actors/Stones2Filled_01.png
 
+#begin Background new/Mono game background.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Background new/Mono game background.jpg
+
+#begin Background new/Mono game background.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Background new/Mono game background.jpg
+
 #begin backgrounds/game_background_4.png
 /importer:TextureImporter
 /processor:TextureProcessor

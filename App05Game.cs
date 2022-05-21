@@ -1,10 +1,11 @@
-﻿using App05MonoGame.Controllers;
-using App05MonoGame.Screens;
+﻿using App05Game.Controllers;
+using App05Game.Screens;
+using App05Game.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace App05MonoGame
+namespace App05Game
 /// <summary>
 /// This game creates a variety of sprites as an example.  
 /// There is no game to play yet. The spaceShip and the 
@@ -24,8 +25,8 @@ namespace App05MonoGame
     {
         #region Constants
 
-        public const int HD_Height = 720;
-        public const int HD_Width = 1280;
+        public const int HD_Game_Height = 720;
+        public const int HD_Game_Width = 1280;
 
         public const string GameName = "Attacker";
         public const string ModuleName = "BNU CO453 2022";
@@ -37,6 +38,7 @@ namespace App05MonoGame
 
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
+        
         private Texture2D playerImage;
         private Texture2D walkDownImage;
         private Texture2D walkUpImage;
@@ -45,7 +47,8 @@ namespace App05MonoGame
 
         private Texture2D monoGameBackgroundImage;
         private Texture2D coinsImage;
-        private Texture2D coinsUpImage;
+
+        private PlayerSprite player;
 
         // Screens
 
@@ -68,8 +71,8 @@ namespace App05MonoGame
         
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = HD_Width;
-            graphics.PreferredBackBufferHeight = HD_Height;
+            graphics.PreferredBackBufferWidth = HD_Game_Width;
+            graphics.PreferredBackBufferHeight = HD_Game_Height;
 
             graphics.ApplyChanges();
 
@@ -82,13 +85,18 @@ namespace App05MonoGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             playerImage = Content.Load<Texture2D>("Player/player");
-
-            // Load Music and SoundEffects
-
-            SoundController.LoadContent(Content);
-            SoundController.PlaySong("Adventure");
-
-            startScreen = new StartScreen(this);
+            walkDownImage = Content.Load<Texture2D>("Player/walkDown");
+            walkUpImage = Content.Load<Texture2D>("Player/walkUp");
+            walkRightImage = Content.Load<Texture2D>("Player/walkRight");
+            walkLeftImage = Content.Load<Texture2D>("Player/walkLeft");
+            monoGameBackgroundImage = Content.Load<Texture2D>("Player/monoGameBackground");
+            coinsImage = Content.Load<Texture2D>("Player/coins");
+            SetupSprites();
+        }
+        private void SetupSprites() 
+        {
+            player = new PlayerSprite(200,300);
+            player.Image= playerImage;
         }
 
 
@@ -105,6 +113,7 @@ namespace App05MonoGame
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || 
                 Keyboard.GetState().IsKeyDown(Keys.Escape)) 
                 Exit();
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -122,6 +131,7 @@ namespace App05MonoGame
 
             spriteBatch.Draw(
                 monoGameBackgroundImage,position,Color.White);
+            spriteBatch.Draw(player.Image,player.Position,Color.Yellow);
             spriteBatch.End();
             base.Draw(gameTime);
         }

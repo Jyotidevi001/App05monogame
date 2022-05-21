@@ -1,147 +1,113 @@
 ﻿using App05MonoGame.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
-namespace App05MonoGame.Sprites
+namespace App05Game
 {
+  
     /// <summary>
-    /// This is a basic sprite which has a single image which
-    /// can be scaled and rotated around an origin.  The Bounding
-    /// Box is the Rectangle the image occupies, and the Bounday
-    /// if it exists is the area inside outside which the Sprite can
-    /// not move.  Direction is a Vector such as (0, 1) which indicate
-    /// the down direction, and Speed is the rate of movement.  A
-    /// Speed of 60 is one pixel per second.  The Sprite can only
-    /// move if it is Active and Alive.
+    /// Create a sprite that is active, alive and
+    /// visible with no speed, rotation or scale
+    /// facing east (to the right)
     /// </summary>
-    public class Sprite: 
-        ICloneable, IDrawableInterface, IUpdateableInterface
+    /// <Author>
+    /// Jyoti Devi & Narinder Kaur 
+    /// </Author> 
+    /// 
+    public class Sprite
+       //structures 
     {
-        #region Properties
+        public Rectangle Boundary { get; set; }
 
-        // Single Image
-        public Texture2D Image { get; set; }
+        public Vector2 StartPosition { get; set; }  
 
         public Vector2 Position { get; set; }
 
-        // A rectangle limiting where the sprite can move
-        public Rectangle Boundary { get; set; }
-
-        // Speed = 60 is 1 Pixel/second
-        public float Speed { get; set; }
-
-        public Vector2 Origin { get; set; }
-
-        public float Rotation { get; set; }
-
-        public float RotationSpeed { get; set; }
-
-        public Vector2 Direction { get; set; }
-
-        public float Scale { get; set; }
-
-        public SpriteFont TextFont { get; set; }
-
-        public bool IsVisible { get; set; }
-
-        public bool IsAlive { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public virtual int Width
+        //properties 
+        public int MaxSpeed { get; set; }
+        public int MinSpeed { get; set; }
+        public int Speed { get; set; }
+        public Texture2D Image { get; set; }
+        public bool isActive { get; set; }
+        public bool isAlive { get; set; }
+        public int Width
         {
             get { return Image.Width; }
         }
-
-        public virtual int Height
+        public int Height
         {
             get { return Image.Height; }
         }
+        // the rectangle occupied by the unscaled image 
 
-        // The rectangle occupied by the unscaled image
         public Rectangle BoundingBox
         {
-            get
+            get 
             {
-                return new Rectangle
-                (
-                    (int)Position.X,
-                    (int)Position.Y,
-                    (int)(Width * Scale), (int)(Height * Scale)
-                );
-            }
+                return new Rectangle(
+                    (int)Position.X, (int)Position.Y, Width, Height);
+             }
         }
 
-        public SpriteAttribute Score { get; }
-        public SpriteAttribute Energy { get; }
+        //variables 
 
-        // Variables
-
-        #endregion
-
-        #region Attributes
-
-        protected float deltaTime;
-
-        protected bool debug = false;
-
-        #endregion
-
-        /// <summary>
-        /// Create a sprite that is active, alive and
-        /// visible with no speed, rotation or scale
-        /// facing east (to the right)
-        /// </summary>
-        public Sprite()
-        {
-            if (Image != null)
-                Origin = new Vector2(Width / 2, Height / 2);
-            else Origin = Vector2.Zero;
-
-            Direction = new Vector2(1, 0);
-            Speed = 0;
-
-            IsVisible = true;
-            IsAlive = true;
-            IsActive = true;
-
-            Scale = 1;
-            Rotation = 0;
-            RotationSpeed = 0;
-
-            Score = new SpriteAttribute(0, 100, 0);
-            Energy = new SpriteAttribute(0, 100, 100);
-        }
+        protected float deltaTime; 
 
         /// <summary>
         /// Constructor sets the main image and starting position of
         /// the Sprite as a Vector2
         /// </summary>
-        public Sprite(Texture2D image, int x, int y) : this()
+        public Sprite(Texture2D image, int x, int y) 
         {
             Image = image;
             Position = new Vector2(x, y);
+            StartPosition = Position;
+            MaxSpeed = 1000;
+            MinSpeed = 200;
+            Speed = MinSpeed;
+
+            isActive = true;
+            isAlive = true;
+        }
+        public Vector2 GetCenterPosition()
+        {
+            return new Vector2(Position.X - Image.Width/ 2, 
+                            Position.Y - Image.Height / 2);
         }
 
-        public bool HasCollided(Sprite otherSprite)
+        public void ResetPosition()
         {
-            if(BoundingBox.Intersects(otherSprite.BoundingBox))
-            {
-                int margin = 8 * (int)Scale;
-                Rectangle overlap = Rectangle.Intersect(BoundingBox, otherSprite.BoundingBox);
-                if(overlap.Width > margin)
-                    return true;
-            }
-
-            return false;
+            Position = StartPosition;
         }
 
         public virtual void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+            KeyboardState keyState = Keyboard.GetState();
+            float newX, newY;
+            if (keyState.IsKeyDown(keys.Right))
+            {
+                newX = Position.X + Speed * deltaTime;
+                Position = new Vector2(newX, Position.Y);
+            }
+            if(keyState.IsKeyDown(keys.Left))
+            {
+                newX = Position.X - Speed * deltaTime;
+                Position = new Vector2(newX, Position.Y);
+            }
+            if (keyState.IsKeyDown(keys.Up))
+            {
+                newY = Position.Y - Speed * deltaTime;
+                Position = new Vector2(newY, Position.X);
+            }
+            if (keyState.IsKeyDown(keys.Down))
+            {
+                newY = Position.Y + Speed * deltaTime;
+                Position = new Vector2(newY, Position.X);
+            }
             deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (IsActive && IsAlive)
+            if (isActive && isAlive)
             {
                 Rotation += MathHelper.ToRadians(RotationSpeed);
                 Vector2 newPosition = Position + ((Direction * Speed) * deltaTime);
@@ -171,7 +137,7 @@ namespace App05MonoGame.Sprites
             if (Origin == Vector2.Zero)
                 Origin = new Vector2(Width / 2, Height / 2);
 
-            if(IsVisible)
+            if(isActive)
             {
                 spriteBatch.Draw
                     (Image,

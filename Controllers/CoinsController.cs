@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 
-namespace App05MonoGame.Controllers
+namespace App05Game.Controllers
 {
     /// <summary>
     /// Could be used for three different coloured coins

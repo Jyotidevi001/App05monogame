@@ -1,9 +1,11 @@
 ﻿using System;
 
-namespace App05MonoGame
+
+namespace App05Game
 {
     public static class Program
     {
+
         [STAThread]
         static void Main()
         {
